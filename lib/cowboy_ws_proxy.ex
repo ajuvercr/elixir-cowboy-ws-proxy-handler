@@ -19,15 +19,17 @@ defmodule CowboyWsProxy do
       path: "/"
     }
 
-    f = fn (req) -> nil end
+    f = fn req -> default |> Map.put(:path, req.path <> "?" <> req.qs) end
 
     routes =
       :cowboy_router.compile([
         {:_,
          [
-           {:_, WsHandler, {
-             f, default
-           }}
+           {:_, WsHandler,
+            {
+              f,
+              default
+            }}
          ]}
       ])
 
